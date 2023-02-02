@@ -1,0 +1,69 @@
+package com.mogakso.domains.auth.presentation.controllers;
+
+import com.mogakso.common.errors.codes.AuthErrorCodeImpl;
+import com.mogakso.domains.auth.domain.entity.TokenEntity;
+import com.mogakso.domains.auth.domain.entity.UserEntity;
+import com.mogakso.domains.auth.presentation.requests.SignInRequest;
+import com.mogakso.domains.auth.presentation.requests.SignUpRequest;
+import com.mogakso.domains.auth.presentation.responses.SignInResponse;
+import com.mogakso.domains.auth.presentation.responses.SignUpResponse;
+import com.mogakso.domains.auth.presentation.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.HashMap;
+
+@RestController
+@RequestMapping("/api/user")
+public class UserController {
+    @Autowired
+    private UserService userService;
+
+    @PostMapping(value = "signIn", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity signInForForm(@RequestBody SignInRequest signInRequest) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.signIn(signInRequest));
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AuthErrorCodeImpl().getACCOUNT_NOT_EXISTS());
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping(value = "signIn", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<SignInResponse> signInForJson(SignInRequest signInRequest) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(userService.signIn(signInRequest));
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping(value = "signUp", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SignUpResponse> signUpForJson(@RequestBody SignUpRequest signUpRequest) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(signUpRequest));
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping(value = "signUp", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<SignUpResponse> signUpForForm(SignUpRequest signUpRequest) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(signUpRequest));
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+}
