@@ -1,8 +1,5 @@
 package com.mogakso.domains.auth.presentation.controllers;
 
-import com.mogakso.common.errors.codes.AuthErrorCodeImpl;
-import com.mogakso.domains.auth.domain.entity.TokenEntity;
-import com.mogakso.domains.auth.domain.entity.UserEntity;
 import com.mogakso.domains.auth.presentation.requests.SignInRequest;
 import com.mogakso.domains.auth.presentation.requests.SignUpRequest;
 import com.mogakso.domains.auth.presentation.responses.SignInResponse;
@@ -14,9 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -24,19 +18,33 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "signIn", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity signInForForm(@RequestBody SignInRequest signInRequest) {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(userService.signIn(signInRequest));
-        } catch (IllegalArgumentException illegalArgumentException) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new AuthErrorCodeImpl().getACCOUNT_NOT_EXISTS());
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<SignInResponse> signInForForm(@RequestBody SignInRequest signInRequest) {
+        return signIn(signInRequest);
     }
 
     @PostMapping(value = "signIn", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<SignInResponse> signInForJson(SignInRequest signInRequest) {
+        return signIn(signInRequest);
+    }
+
+    @PostMapping(value = "signUp", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SignUpResponse> signUpForJson(@RequestBody SignUpRequest signUpRequest) {
+        return signUp(signUpRequest);
+    }
+
+    @PostMapping(value = "signUp", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity<SignUpResponse> signUpForForm(SignUpRequest signUpRequest) {
+        return signUp(signUpRequest);
+    }
+
+    public ResponseEntity<SignInResponse> signIn(SignInRequest signInRequest) {
         try {
+            SignInResponse signInResponse = userService.signIn(signInRequest);
+
+            if (signInResponse == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+
             return ResponseEntity.status(HttpStatus.OK).body(userService.signIn(signInRequest));
         } catch (IllegalArgumentException illegalArgumentException) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -45,20 +53,14 @@ public class UserController {
         }
     }
 
-    @PostMapping(value = "signUp", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SignUpResponse> signUpForJson(@RequestBody SignUpRequest signUpRequest) {
+    public ResponseEntity<SignUpResponse> signUp(SignUpRequest signUpRequest) {
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(signUpRequest));
-        } catch (IllegalArgumentException illegalArgumentException) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+            SignUpResponse signUpResponse = userService.signUp((signUpRequest));
 
-    @PostMapping(value = "signUp", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<SignUpResponse> signUpForForm(SignUpRequest signUpRequest) {
-        try {
+            if (signUpResponse == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+
             return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(signUpRequest));
         } catch (IllegalArgumentException illegalArgumentException) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

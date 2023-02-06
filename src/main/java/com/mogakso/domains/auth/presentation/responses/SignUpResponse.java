@@ -1,6 +1,7 @@
 package com.mogakso.domains.auth.presentation.responses;
 
 import com.mogakso.domains.auth.domain.entity.TokenEntity;
+import com.mogakso.domains.auth.domain.entity.UserEntity;
 
 public class SignUpResponse {
     private final String accessToken;

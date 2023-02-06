@@ -9,7 +9,8 @@ public record UserEntity(
         String password,
         @JsonProperty("nickname")
         String nickname,
-        TokenEntity token
+        @JsonProperty("refreshToken")
+        String refreshToken
 ) {
 }
 
