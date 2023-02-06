@@ -54,7 +54,7 @@ public class UserService {
             return null;
         }
 
-        if (!passwordEncoder.matches(userEntity.password(), signInRequest.getPassword()))
+        if (!passwordEncoder.matches(signInRequest.getPassword(), userEntity.password()))
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 
         TokenEntity tokenEntity = new TokenEntity(jwtUtil.createToken(true), userEntity.refreshToken());

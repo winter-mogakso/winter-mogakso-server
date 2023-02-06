@@ -20,6 +20,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws
             Exception {
-        return httpSecurity.authorizeHttpRequests().requestMatchers("/api/user/signUp", "/api/user/signIn").permitAll().and().build();
+        return httpSecurity.authorizeHttpRequests().requestMatchers("/api/user/signUp", "/api/user/signIn").permitAll().and().csrf().disable().build();
     }
 }
