@@ -11,20 +11,26 @@ import com.mogakso.domains.auth.presentation.responses.SignUpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired
-    private JwtUtil jwtUtil;
+
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    public UserService(PasswordEncoder passwordEncoder, JwtUtil jwtUtil, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
+    }
 
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
-        verifyDuplicatedUser(signUpRequest.getAccount());
-
         if (userRepository.findByAccount(signUpRequest.getAccount()) != null) {
             log.info("[Service][update] user account %s exists", signUpRequest.getNickname());
             return null;
@@ -34,7 +40,7 @@ public class UserService {
         TokenEntity tokenEntity = new TokenEntity(jwtUtil.createToken(true), jwtUtil.createToken(false));
         UserEntity userEntity = new UserEntity(
                 signUpRequest.getAccount(),
-                signUpRequest.getPassword(),
+                passwordEncoder.encode(signUpRequest.getPassword()),
                 signUpRequest.getNickname(),
                 tokenEntity.refreshToken());
         userRepository.save(userEntity);
@@ -48,14 +54,10 @@ public class UserService {
             return null;
         }
 
-        if (!userEntity.password().equals(signInRequest.getPassword()))
+        if (!passwordEncoder.matches(userEntity.password(), signInRequest.getPassword()))
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 
         TokenEntity tokenEntity = new TokenEntity(jwtUtil.createToken(true), userEntity.refreshToken());
         return new SignInResponse(tokenEntity);
-    }
-
-    private void verifyDuplicatedUser(String account) {
-        // if(userRepository.find() != null) throw new IllegalArgumentException("중복된 유저입니다.");
     }
 }

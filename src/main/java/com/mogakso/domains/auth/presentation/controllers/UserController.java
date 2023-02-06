@@ -37,7 +37,7 @@ public class UserController {
         return signUp(signUpRequest);
     }
 
-    public ResponseEntity<SignInResponse> signIn(SignInRequest signInRequest) {
+    private ResponseEntity<SignInResponse> signIn(SignInRequest signInRequest) {
         try {
             SignInResponse signInResponse = userService.signIn(signInRequest);
 
@@ -53,7 +53,7 @@ public class UserController {
         }
     }
 
-    public ResponseEntity<SignUpResponse> signUp(SignUpRequest signUpRequest) {
+    private ResponseEntity<SignUpResponse> signUp(SignUpRequest signUpRequest) {
         try {
             SignUpResponse signUpResponse = userService.signUp((signUpRequest));
 
