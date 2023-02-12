@@ -1,5 +1,7 @@
 package com.mogakso.domains.auth.presentation.controllers;
 
+import com.mogakso.domains.auth.presentation.requests.CheckAccountRequest;
+import com.mogakso.domains.auth.presentation.requests.CheckNicknameRequest;
 import com.mogakso.domains.auth.presentation.requests.SignInRequest;
 import com.mogakso.domains.auth.presentation.requests.SignUpRequest;
 import com.mogakso.domains.auth.presentation.responses.SignInResponse;
@@ -37,6 +39,38 @@ public class UserController {
         return signUp(signUpRequest);
     }
 
+    @GetMapping("checkAccount/{account}")
+    public ResponseEntity checkAccount(@PathVariable String account) {
+        try {
+            if (account == null || account.length() < 3) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (userService.checkAccount(account)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("checkNickname/{nickname}")
+    public ResponseEntity checkNickname(@PathVariable String nickname) {
+        try {
+            if (nickname == null || nickname.length() < 3) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            if (userService.checkNickname(nickname)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     private ResponseEntity<SignInResponse> signIn(SignInRequest signInRequest) {
         try {
             SignInResponse signInResponse = userService.signIn(signInRequest);
@@ -45,7 +79,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
-            return ResponseEntity.status(HttpStatus.OK).body(userService.signIn(signInRequest));
+            return ResponseEntity.status(HttpStatus.OK).body(signInResponse);
         } catch (IllegalArgumentException illegalArgumentException) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception exception) {
@@ -61,7 +95,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.signUp(signUpRequest));
+            return ResponseEntity.status(HttpStatus.CREATED).body(signUpResponse);
         } catch (IllegalArgumentException illegalArgumentException) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception exception) {

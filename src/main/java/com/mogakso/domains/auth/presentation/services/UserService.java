@@ -32,11 +32,11 @@ public class UserService {
 
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         if (userRepository.findByAccount(signUpRequest.getAccount()) != null) {
-            log.info("[Service][update] user account %s exists", signUpRequest.getNickname());
+            log.info("[Service][update] user account {} exists", signUpRequest.getNickname());
             return null;
         }
 
-        log.info("[Service][insert] new user creates");
+        log.info("[Service][insert] new user {} creates", signUpRequest.getNickname());
         TokenEntity tokenEntity = new TokenEntity(jwtUtil.createToken(true), jwtUtil.createToken(false));
         UserEntity userEntity = new UserEntity(
                 signUpRequest.getAccount(),
@@ -50,7 +50,7 @@ public class UserService {
     public SignInResponse signIn(SignInRequest signInRequest) {
         UserEntity userEntity = userRepository.findByAccount(signInRequest.getAccount());
         if (userEntity == null) {
-            log.info("[Service] account %s not exist", signInRequest.getAccount());
+            log.info("[Service] account {} not exist", signInRequest.getAccount());
             return null;
         }
 
@@ -59,5 +59,13 @@ public class UserService {
 
         TokenEntity tokenEntity = new TokenEntity(jwtUtil.createToken(true), userEntity.refreshToken());
         return new SignInResponse(tokenEntity);
+    }
+
+    public boolean checkAccount(String account) {
+        return userRepository.findByAccount(account) == null;
+    }
+
+    public boolean checkNickname(String nickname) {
+        return userRepository.findByNickname(nickname) == null;
     }
 }
