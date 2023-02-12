@@ -13,8 +13,26 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final String[] API_WHITE_LIST = {
+            "/api/user/signUp",
+            "/api/user/signIn",
+            "/api/user/checkAccount",
+            "/api/user/checkNickname"
+    };
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws
+            Exception {
+        return httpSecurity
+                .httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeHttpRequests().requestMatchers(API_WHITE_LIST).permitAll()
+                .and().build();
     }
 }
