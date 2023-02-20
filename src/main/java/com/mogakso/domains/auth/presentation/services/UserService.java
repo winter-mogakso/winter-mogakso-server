@@ -32,7 +32,7 @@ public class UserService {
 
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         if (userRepository.findByAccount(signUpRequest.getAccount()) != null) {
-            log.info("[Service][update] user account {} exists", signUpRequest.getNickname());
+            log.info("[Service][update] user account {} exists", signUpRequest.getAccount());
             return null;
         }
 
