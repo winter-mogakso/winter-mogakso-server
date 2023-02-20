@@ -34,7 +34,6 @@ public class WebConfig implements WebMvcConfigurer {
                 INTERCEPTOR_WHITE_LIST[index] = PROD_AND_DEV_API_PREFIX + INTERCEPTOR_WHITE_LIST[index];
             }
         }
-
         registry.addInterceptor(new JwtAuthInterceptor())
                 .excludePathPatterns(INTERCEPTOR_WHITE_LIST);
     }

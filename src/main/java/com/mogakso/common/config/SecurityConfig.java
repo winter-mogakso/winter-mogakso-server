@@ -51,7 +51,6 @@ public class SecurityConfig {
                 API_WHITE_LIST[index] = PROD_AND_DEV_API_PREFIX + API_WHITE_LIST[index];
             }
         }
-
         return httpSecurity
                 .httpBasic().disable()
                 .cors().disable()
