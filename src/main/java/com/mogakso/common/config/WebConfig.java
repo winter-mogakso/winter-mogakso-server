@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     private String[] INTERCEPTOR_WHITE_LIST = {
-            "/api/user/**",
+            "/spring-api/user/**",
     };
 
     @Override

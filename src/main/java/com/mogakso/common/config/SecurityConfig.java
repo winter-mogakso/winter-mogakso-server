@@ -19,10 +19,10 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
     private final String[] API_WHITE_LIST = {
-            "/api/user/signUp",
-            "/api/user/signIn",
-            "/api/user/checkAccount",
-            "/api/user/checkNickname"
+            "/spring-api/user/signUp",
+            "/spring-api/user/signIn",
+            "/spring-api/user/checkAccount",
+            "/spring-api/user/checkNickname"
     };
 
     @Bean
