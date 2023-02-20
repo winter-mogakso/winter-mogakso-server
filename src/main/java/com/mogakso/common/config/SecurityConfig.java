@@ -30,6 +30,7 @@ public class SecurityConfig {
             Exception {
         return httpSecurity
                 .httpBasic().disable()
+                .cors().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests().requestMatchers(API_WHITE_LIST).permitAll()
