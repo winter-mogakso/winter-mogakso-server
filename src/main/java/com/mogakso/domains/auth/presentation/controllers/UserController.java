@@ -1,8 +1,6 @@
 package com.mogakso.domains.auth.presentation.controllers;
 
 import com.mogakso.common.swaggers.ApiDocumentResponse;
-import com.mogakso.domains.auth.presentation.requests.CheckAccountRequest;
-import com.mogakso.domains.auth.presentation.requests.CheckNicknameRequest;
 import com.mogakso.domains.auth.presentation.requests.SignInRequest;
 import com.mogakso.domains.auth.presentation.requests.SignUpRequest;
 import com.mogakso.domains.auth.presentation.responses.SignInResponse;
@@ -16,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @Tag(name = "User Controller", description = "유저 관련 컨트롤러")
 @RestController
 @RequestMapping("/user")
@@ -28,25 +27,27 @@ public class UserController {
     }
 
     @ApiDocumentResponse
-    @Operation(summary = "userSignIn", description = "유저 로그인")
-    @PostMapping(value = "signIn", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "userSignIn", description = "유저 로그인 Json")
+    @PostMapping(value = "json/signIn", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignInResponse> signInForForm(@RequestBody SignInRequest signInRequest) {
         return signIn(signInRequest);
     }
 
-    @PostMapping(value = "signIn", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @Operation(summary = "userSignIn", description = "유저 로그인 Form")
+    @PostMapping(value = "form/signIn", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<SignInResponse> signInForJson(SignInRequest signInRequest) {
         return signIn(signInRequest);
     }
 
     @ApiDocumentResponse
-    @Operation(summary = "userSignUp", description = "유저 회원가입")
-    @PostMapping(value = "signUp", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "userSignUp", description = "유저 회원가입 Json")
+    @PostMapping(value = "json/signUp", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignUpResponse> signUpForJson(@RequestBody SignUpRequest signUpRequest) {
         return signUp(signUpRequest);
     }
 
-    @PostMapping(value = "signUp", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @Operation(summary = "userSignUp", description = "유저 회원가입 Form")
+    @PostMapping(value = "form/signUp", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<SignUpResponse> signUpForForm(SignUpRequest signUpRequest) {
         return signUp(signUpRequest);
     }
