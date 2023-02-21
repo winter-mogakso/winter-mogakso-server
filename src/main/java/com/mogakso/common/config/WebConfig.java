@@ -14,7 +14,6 @@ import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    private final String PROD_AND_DEV_API_PREFIX = "/spring-api";
     private String[] INTERCEPTOR_WHITE_LIST = {
             "/v3/api-docs/**",
             "/swagger-ui/**",
@@ -22,21 +21,8 @@ public class WebConfig implements WebMvcConfigurer {
             "/user/**",
     };
 
-    private final Environment environment;
-
-    @Autowired
-    public WebConfig(Environment environment) {
-        this.environment = environment;
-    }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        List<String> activeProfiles = Arrays.stream(environment.getActiveProfiles()).toList();
-        if (activeProfiles.contains("prod") || activeProfiles.contains("dev")) {
-            for (int index = 0; index < INTERCEPTOR_WHITE_LIST.length; index++) {
-                INTERCEPTOR_WHITE_LIST[index] = PROD_AND_DEV_API_PREFIX + INTERCEPTOR_WHITE_LIST[index];
-            }
-        }
         registry.addInterceptor(new JwtAuthInterceptor())
                 .excludePathPatterns(INTERCEPTOR_WHITE_LIST);
     }

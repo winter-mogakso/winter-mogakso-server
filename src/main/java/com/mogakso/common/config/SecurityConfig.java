@@ -22,7 +22,6 @@ import java.util.Objects;
 @EnableWebSecurity
 @EnableConfigurationProperties
 public class SecurityConfig {
-    private final String PROD_AND_DEV_API_PREFIX = "/spring-api";
     private final String[] API_WHITE_LIST = {
             "/v3/api-docs/**",
             "/swagger-ui/**",
@@ -33,13 +32,6 @@ public class SecurityConfig {
             "/user/checkNickname"
     };
 
-    private final Environment environment;
-
-    @Autowired
-    public SecurityConfig(Environment environment) {
-        this.environment = environment;
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -48,12 +40,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws
             Exception {
-        List<String> activeProfiles = Arrays.stream(environment.getActiveProfiles()).toList();
-        if (activeProfiles.contains("prod") || activeProfiles.contains("dev")) {
-            for (int index = 0; index < API_WHITE_LIST.length; index++) {
-                API_WHITE_LIST[index] = PROD_AND_DEV_API_PREFIX + API_WHITE_LIST[index];
-            }
-        }
         return httpSecurity
                 .httpBasic().disable()
                 .cors().disable()
