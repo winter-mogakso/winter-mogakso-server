@@ -1,25 +1,16 @@
 package com.mogakso.domains.auth.presentation.requests;
 
-public class SignUpRequest {
-    private final String account;
-    private final String password;
-    private final String nickname;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 
-    public SignUpRequest(String account, String password, String nickname) {
-        this.account = account;
-        this.password = password;
-        this.nickname = nickname;
-    }
-
-    public String getAccount() {
-        return account;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
+public record SignUpRequest(
+        @Schema(description = "계정", example = "myAccount", required = true)
+        @NotBlank
+        String account,
+        @Schema(description = "비밀번호", example = "myPassword", required = true)
+        @NotBlank
+        String password,
+        @Schema(description = "닉네임", example = "myNickname", required = true)
+        @NotBlank
+        String nickname) {
 }

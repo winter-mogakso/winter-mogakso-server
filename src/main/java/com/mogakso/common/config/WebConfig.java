@@ -16,6 +16,12 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
     private final String PROD_AND_DEV_API_PREFIX = "/spring-api";
     private String[] INTERCEPTOR_WHITE_LIST = {
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
             "/user/**",
     };
 

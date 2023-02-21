@@ -31,17 +31,17 @@ public class UserService {
     }
 
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
-        if (userRepository.findByAccount(signUpRequest.getAccount()) != null) {
-            log.info("[Service][update] user account {} exists", signUpRequest.getAccount());
+        if (userRepository.findByAccount(signUpRequest.account()) != null) {
+            log.info("[Service][update] user account {} exists", signUpRequest.account());
             return null;
         }
 
-        log.info("[Service][insert] new user {} creates", signUpRequest.getNickname());
+        log.info("[Service][insert] new user {} creates", signUpRequest.nickname());
         TokenEntity tokenEntity = new TokenEntity(jwtUtil.createToken(true), jwtUtil.createToken(false));
         UserEntity userEntity = new UserEntity(
-                signUpRequest.getAccount(),
-                passwordEncoder.encode(signUpRequest.getPassword()),
-                signUpRequest.getNickname(),
+                signUpRequest.account(),
+                passwordEncoder.encode(signUpRequest.password()),
+                signUpRequest.nickname(),
                 tokenEntity.refreshToken());
         userRepository.save(userEntity);
         return new SignUpResponse(tokenEntity);

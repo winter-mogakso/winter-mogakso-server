@@ -1,15 +1,10 @@
 package com.mogakso.domains.auth.presentation.requests;
 
-public class CheckNicknameRequest {
-    private final String nickname;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 
-
-    public CheckNicknameRequest(String nickname) {
-        this.nickname = nickname;
-
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
+public record CheckNicknameRequest(
+        @Schema(description = "닉네임", example = "myNickname", required = true)
+        @NotBlank
+        String nickname) {
 }

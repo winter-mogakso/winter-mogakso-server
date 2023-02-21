@@ -1,5 +1,6 @@
 package com.mogakso.domains.auth.presentation.controllers;
 
+import com.mogakso.common.swaggers.ApiDocumentResponse;
 import com.mogakso.domains.auth.presentation.requests.CheckAccountRequest;
 import com.mogakso.domains.auth.presentation.requests.CheckNicknameRequest;
 import com.mogakso.domains.auth.presentation.requests.SignInRequest;
@@ -7,18 +8,27 @@ import com.mogakso.domains.auth.presentation.requests.SignUpRequest;
 import com.mogakso.domains.auth.presentation.responses.SignInResponse;
 import com.mogakso.domains.auth.presentation.responses.SignUpResponse;
 import com.mogakso.domains.auth.presentation.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController()
+@Tag(name = "User Controller", description = "유저 관련 컨트롤러")
+@RestController
 @RequestMapping(value = {"/user", "/spring-api/user"})
 public class UserController {
-    @Autowired
     private UserService userService;
 
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @ApiDocumentResponse
+    @Operation(summary = "userSignIn", description = "유저 로그인")
     @PostMapping(value = "signIn", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignInResponse> signInForForm(@RequestBody SignInRequest signInRequest) {
         return signIn(signInRequest);
@@ -29,6 +39,8 @@ public class UserController {
         return signIn(signInRequest);
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "userSignUp", description = "유저 회원가입")
     @PostMapping(value = "signUp", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignUpResponse> signUpForJson(@RequestBody SignUpRequest signUpRequest) {
         return signUp(signUpRequest);
@@ -39,6 +51,8 @@ public class UserController {
         return signUp(signUpRequest);
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "userCheckAccount", description = "계정 중복 확인")
     @GetMapping("checkAccount/{account}")
     public ResponseEntity checkAccount(@PathVariable String account) {
         try {
@@ -55,6 +69,8 @@ public class UserController {
         }
     }
 
+    @ApiDocumentResponse
+    @Operation(summary = "userCheckNickname", description = "닉네임 중복 확인")
     @GetMapping("checkNickname/{nickname}")
     public ResponseEntity checkNickname(@PathVariable String nickname) {
         try {

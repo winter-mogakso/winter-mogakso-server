@@ -1,15 +1,10 @@
 package com.mogakso.domains.auth.presentation.requests;
 
-public class CheckAccountRequest {
-    private final String account;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 
-
-    public CheckAccountRequest(String account) {
-        this.account = account;
-
-    }
-
-    public String getAccount() {
-        return account;
-    }
+public record CheckAccountRequest(
+        @Schema(description = "계정", example = "myAccount", required = true)
+        @NotBlank
+        String account) {
 }
